@@ -3,9 +3,10 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import router from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
+import loginRoutes from "./routes/loginRoute.js";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import cors from "cors";
 
 
 dotenv.config();
@@ -20,6 +21,7 @@ mongoose
   const app = express();
 
   app.use(express.json());
+  app.use(cors({ origin: "http://localhost:3000" }));
 
   const _filename = fileURLToPath(import.meta.url);
   const _dirname = path.dirname(_filename);
@@ -31,7 +33,9 @@ mongoose
 
  app.use("/api/users", router);
 
- app.use("/api/auth", authRoutes);
+ app.use("/api", authRoutes);
+
+ app.use("/api", loginRoutes);
 
 app.get("/", (req, res) => {
     res.send("Hello basic World!!!")
@@ -58,8 +62,9 @@ app.use((err, req, res, next) => {
     success: false,
     statusCode: statusCode,
     message,
-  });
-  
+    });
+
+
     
 });
 
